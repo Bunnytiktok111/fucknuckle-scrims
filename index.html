@@ -190,12 +190,30 @@ h1 span{color:#a18aff;text-shadow:0 0 40px #8b5cf62b}
  .navlinks a.active{background:linear-gradient(110deg,#8b5cf6,#4b9eea)}
 }
 
+
+/* SCRIM BOOKING UI */
+.booking-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.9fr);gap:16px;align-items:start}
+.booking-gate{min-width:0}
+.booking-choice{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.booking-panel{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.booking-panel h3{margin:0 0 8px}
+.booking-panel form{display:grid;gap:12px}
+.booking-panel .form-grid{margin-top:12px}
+.booking-panel input[type=datetime-local]{min-width:0}
+.booking-slot{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);background:#0c1120;padding:13px;border-radius:10px}
+.booking-slot strong{display:block;font-size:13px}
+.booking-slot small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.booking-slot .slot-count{font-weight:900;white-space:nowrap;color:var(--gold)}
+.booking-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:850px){.booking-layout{grid-template-columns:1fr}}
+@media(max-width:520px){.booking-slot{align-items:flex-start;flex-direction:column}.booking-choice>.btn{width:100%}}
+
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap nav">
 <a class="brand" href="#home" aria-label="Fucknucle Scrims home"><span class="brand-mark">FN</span><span>FUCKNUCLE<small>PUBG SCRIMS · BUILT FOR THE SQUAD</small></span></a>
-<nav class="navlinks" id="navlinks"><a href="#home" data-page="home" class="active">Overview</a><a href="#scrims" data-page="scrims">Scrims</a><a href="#leaderboard" data-page="leaderboard">Leaderboard</a><a href="#season" data-page="season">Season Standings</a><a href="#results" data-page="results">Match Results</a></nav>
+<nav class="navlinks" id="navlinks"><a href="#home" data-page="home" class="active">Overview</a><a href="#scrims" data-page="scrims">Scrims</a><a href="#booking" data-page="booking">Scrim Booking</a><a href="#leaderboard" data-page="leaderboard">Leaderboard</a><a href="#season" data-page="season">Season Standings</a><a href="#results" data-page="results">Match Results</a></nav>
 <div class="navright"><a class="btn ghost" href="https://discord.gg/F7QpaYGtWZ" target="_blank" rel="noopener noreferrer">Join Discord ↗</a><a class="btn primary nav-register" href="#register">Register Team ↗</a><button class="btn menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button></div>
 </div></header>
 <main>
@@ -211,8 +229,43 @@ h1 span{color:#a18aff;text-shadow:0 0 40px #8b5cf62b}
 <section id="season" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Current season</div><h1>SEASON <span style="color:var(--red)">LEADERBOARD</span></h1><p>Season-specific standings. Ties are allowed when teams have equal points.</p></div><div class="card"><div class="card-title"><h3 id="seasonTitle">Season 01</h3><span class="pill red">CURRENT SEASON</span></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Points</th><th>Wins</th><th>Kills</th><th>Matches</th></tr></thead><tbody id="seasonTable"></tbody></table></div></div></div></section>
 <section id="scrims" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Find your next lobby</div><h1>UPCOMING <span style="color:var(--red)">SCRIMS</span></h1><p>Check the schedule and register your squad. Official lobby details will be shared by the organisers.</p></div><div class="scrim-list" id="allScrims"></div><div class="notice" style="margin-top:18px">Dates and lobby information are only confirmed when published by the organisers. No real events are scheduled in this starter version yet.</div></div></section>
 <section id="results" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Match archive</div><h1>MATCH <span style="color:var(--red)">RESULTS</span></h1><p>Past scrim results and recorded match performance.</p></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Scrim</th><th>Team</th><th>Placement</th><th>Kills</th><th>Points</th></tr></thead><tbody id="resultsTable"></tbody></table></div></div></div></section>
+
+<section id="booking" class="page"><div class="wrap">
+  <div class="page-heading"><div class="kicker">Team scheduling</div><h1>SCRIM <span style="color:var(--red)">BOOKING</span></h1><p>Only registered teams with payment verified as paid can reserve a spot. Each scrim supports 16 squads — 64 players total.</p></div>
+  <div class="booking-layout">
+    <div class="card booking-gate">
+      <div class="card-title"><h3>Verify team eligibility</h3><span class="pill red">PAID TEAMS ONLY</span></div>
+      <p class="admin-note">Enter the registered team name and captain's PUBG name. The team must be registered and marked Paid by an organiser before it can join or create a scrim.</p>
+      <form id="bookingVerifyForm"><div class="form-grid">
+        <div class="field"><label for="bookingTeam">Registered team name</label><input id="bookingTeam" required maxlength="40" placeholder="Exact team name"></div>
+        <div class="field"><label for="bookingCaptain">Captain's PUBG name</label><input id="bookingCaptain" required maxlength="40" placeholder="Exact captain name"></div>
+        <div class="field full"><button class="btn primary" type="submit">Check eligibility →</button></div>
+      </div></form>
+      <div id="bookingEligibility" class="notice hidden" role="status"></div>
+      <div id="bookingActions" class="hidden">
+        <div class="booking-choice">
+          <button class="btn primary" id="showJoinForm" type="button">Join an existing scrim</button>
+          <button class="btn" id="showCreateForm" type="button">Create a new scrim</button>
+        </div>
+        <div id="joinPanel" class="booking-panel hidden"><h3>Join an existing scrim</h3><p class="admin-note">Choose a scheduled scrim with space for your full four-player squad.</p><form id="joinScrimForm"><div class="field"><label for="joinScrimSelect">Available scrim</label><select id="joinScrimSelect" required></select></div><button class="btn primary" type="submit">Book my squad →</button></form><div id="joinMessage" class="notice hidden"></div></div>
+        <div id="createPanel" class="booking-panel hidden"><h3>Create a new scrim</h3><p class="admin-note">Scrims cannot overlap. A new booking is rejected if its time conflicts with any other scheduled scrim.</p><form id="createScrimForm"><div class="form-grid">
+          <div class="field full"><label for="newScrimName">Scrim name</label><input id="newScrimName" required maxlength="60" placeholder="e.g. Friday Night Scrims"></div>
+          <div class="field"><label for="newScrimStart">Start date and time</label><input id="newScrimStart" type="datetime-local" required></div>
+          <div class="field"><label for="newScrimEnd">End date and time</label><input id="newScrimEnd" type="datetime-local" required></div>
+          <div class="field full"><label for="newScrimMode">Mode</label><select id="newScrimMode"><option>Squad — 4 players per team</option><option>Competitive Squad</option></select></div>
+          <div class="field full"><button class="btn primary" type="submit">Create scrim and reserve squad →</button></div>
+        </div></form><div id="createMessage" class="notice hidden"></div></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-title"><h3>Scheduled scrims</h3><span class="pill">64 players max</span></div><p class="admin-note">Each team takes four player places. Scrims with no date or time set by the organiser are not bookable.</p><div id="bookingScrimList" class="scrim-list"></div></div>
+  </div>
+  <div class="notice" style="margin-top:16px">Prototype limitation: this static version saves registrations, payment status and bookings in this browser only. It does not share bookings between visitors or securely verify payments. A backend is required before using this for real public bookings.</div>
+</div></section>
+
 <section id="register" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Join the competition</div><h1>REGISTER YOUR <span style="color:var(--red)">SQUAD</span></h1><p>Submit your team and roster details for the organisers.</p></div><div class="content-grid"><div class="card"><form id="registerForm"><div class="form-grid"><div class="field"><label for="teamName">Team name *</label><input id="teamName" required maxlength="40" placeholder="Your squad name"></div><div class="field"><label for="captain">Captain's PUBG name *</label><input id="captain" required maxlength="40" placeholder="In-game name"></div><div class="field"><label for="player2">Player 2 *</label><input id="player2" required maxlength="40" placeholder="PUBG name"></div><div class="field"><label for="player3">Player 3 *</label><input id="player3" required maxlength="40" placeholder="PUBG name"></div><div class="field"><label for="player4">Player 4 *</label><input id="player4" required maxlength="40" placeholder="PUBG name"></div><div class="field"><label for="discord">Discord username *</label><input id="discord" required maxlength="60" placeholder="Your Discord username"></div><div class="field full"><label for="scrimChoice">Scrim / season</label><select id="scrimChoice"><option value="Season 01">Season 01 / To be confirmed</option></select></div><div class="field full"><button class="btn primary" type="submit">Submit registration request →</button></div></div><p class="microcopy">Submitting this form on the current preview saves a request only in this browser. It does not yet send it to the organisers.</p></form><div id="registerSuccess" class="notice hidden" role="status"></div></div><div class="card"><div class="kicker">Entry fee</div><h3 style="font-size:25px;margin:5px 0 10px">$1 <span style="font-size:13px;color:var(--muted)">per player</span></h3><p class="admin-note">A full four-player squad is $4 total. Players can pay individually, or one person can pay for the whole team. Keep each player's name and unique registration/payment reference with the payment so organisers can match it correctly.</p><div class="notice">Payment status remains pending until an organiser verifies it. A PayPal return page by itself cannot confirm that a payment was completed.</div><div class="pay-links"><a class="btn primary" href="https://www.paypal.com/ncp/payment/SHSKHZKESNKA2" target="_blank" rel="noopener noreferrer">Pay with PayPal ↗</a><a class="btn" href="https://www.patreon.com/cw/u6489658" target="_blank" rel="noopener noreferrer">Support on Patreon ↗</a></div><p class="microcopy">Do not include passwords or sensitive payment details in this form.</p></div></div></div></section>
-<section id="admin" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Organiser tools</div><h1>ADMIN <span style="color:var(--red)">DASHBOARD</span></h1><p>Admin access and shared-data features will be added in the secure backend stage.</p></div><div class="card"><h3>Starter preview</h3><p class="admin-note">This page is not a secure admin system. Do not put passwords, payment records, or private player information here. In the next build stage, we'll add protected organiser sign-in, a shared database, match-result entry, season management, scrim scheduling and per-player payment confirmation.</p><div class="admin-tools"><button class="btn" id="exportBtn">Export local preview registrations</button><button class="btn" id="resetDemo">Reset local preview data</button></div><p id="adminMessage" class="microcopy"></p></div></div></section>
+<section id="admin" class="page"><div class="wrap"><div class="page-heading"><div class="kicker">Organiser tools</div><h1>ADMIN <span style="color:var(--red)">DASHBOARD</span></h1><p>Admin access and shared-data features will be added in the secure backend stage.</p></div><div class="card"><h3>Starter preview</h3><p class="admin-note">This page is not a secure admin system. Do not put passwords, payment records, or private player information here. In the next build stage, we'll add protected organiser sign-in, a shared database, match-result entry, season management, scrim scheduling and per-player payment confirmation.</p>
+<div class="card" style="margin-top:16px"><div class="card-title"><h3>Registration & payment review</h3><span class="pill red">LOCAL PREVIEW</span></div><p class="admin-note">Mark a team Paid only after checking the payment yourself. This preview control is not secure and changes only this browser.</p><div id="paymentReviewList" class="scrim-list"></div></div>
+<div class="admin-tools"><button class="btn" id="exportBtn">Export local preview registrations</button><button class="btn" id="resetDemo">Reset local preview data</button></div><p id="adminMessage" class="microcopy"></p></div></div></section>
 </main>
 <footer class="footer"><div class="wrap footer-inner"><div><strong style="color:#e6e7e9">FUCKNUCLE SCRIMS</strong><br>Community PUBG scrims · Play fair. Fight hard.</div><div>Entry: $1 per player · <a href="https://www.patreon.com/cw/u6489658" target="_blank" rel="noopener noreferrer">Support the community</a></div><div><a href="#admin">Organiser area</a> · © <span id="year"></span></div></div></footer>
 <script>
@@ -233,7 +286,66 @@ window.addEventListener('hashchange',navigate);document.getElementById('menuTogg
 document.getElementById('registerForm').addEventListener('submit',e=>{e.preventDefault();const names=['captain','player2','player3','player4'].map(id=>document.getElementById(id).value.trim());const reg={id:'FN-'+Date.now().toString(36).toUpperCase(),team:document.getElementById('teamName').value.trim(),players:names,discord:document.getElementById('discord').value.trim(),season:document.getElementById('scrimChoice').value,paymentStatus:'Pending',createdAt:new Date().toISOString()};data.registrations.push(reg);save();const box=document.getElementById('registerSuccess');box.classList.remove('hidden');box.innerHTML='<strong>Preview request saved in this browser.</strong><br>Your reference is <strong>'+esc(reg.id)+'</strong>. This has not been sent to an organiser yet. Keep this reference for payment matching.';e.target.reset();document.getElementById('registerSuccess').scrollIntoView({behavior:'smooth',block:'nearest'});render()});
 document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(data.registrations,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fucknuckle-preview-registrations.json';a.click();URL.revokeObjectURL(url);document.getElementById('adminMessage').textContent='Exported registrations stored in this browser only.'});
 document.getElementById('resetDemo').addEventListener('click',()=>{if(confirm('Reset preview registrations and results saved in this browser?')){data=JSON.parse(JSON.stringify(starter));save();render();document.getElementById('adminMessage').textContent='Local preview data reset.'}});
-render();navigate();
+
+/* SCRIM BOOKING: local preview workflow. Shared production bookings require a backend. */
+function normalName(v){return String(v||'').trim().toLowerCase()}
+function registeredPaidTeam(teamName,captainName){
+  return data.registrations.find(r=>normalName(r.team)===normalName(teamName)&&normalName(r.players&&r.players[0])===normalName(captainName)&&String(r.paymentStatus||'Pending').toLowerCase()==='paid');
+}
+function allScrimTimes(){return (data.scrims||[]).filter(s=>s.startAt&&s.endAt&&s.status!=='Cancelled').map(s=>({...s,startMs:new Date(s.startAt).getTime(),endMs:new Date(s.endAt).getTime()})).filter(s=>Number.isFinite(s.startMs)&&Number.isFinite(s.endMs)&&s.endMs>s.startMs)}
+function scrimTeams(s){if(!Array.isArray(s.teams))s.teams=[];return s.teams}
+function teamAlreadyBooked(s,teamName){return scrimTeams(s).some(t=>normalName(typeof t==='string'?t:t.team)===normalName(teamName))}
+function scrimCapacity(s){return Math.max(0,16-scrimTeams(s).length)}
+function scrimLabel(s){const start=new Date(s.startAt);const end=new Date(s.endAt);return esc(s.name)+' — '+start.toLocaleString()+' to '+end.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+' ('+scrimTeams(s).length+'/16 squads)'}
+function renderBookingScrims(){
+ const list=document.getElementById('bookingScrimList');const select=document.getElementById('joinScrimSelect');if(!list||!select)return;
+ const now=Date.now();const scheduled=allScrimTimes().filter(s=>s.endMs>now).sort((a,b)=>a.startMs-b.startMs);
+ list.innerHTML=scheduled.length?scheduled.map(s=>'<div class="booking-slot"><div><strong>'+esc(s.name)+'</strong><small>'+new Date(s.startAt).toLocaleString()+' – '+new Date(s.endAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</small><small>'+scrimTeams(s).length+' of 16 squads booked · '+(scrimCapacity(s)*4)+' player places left</small></div><span class="slot-count">'+(scrimCapacity(s)>0?'OPEN':'FULL')+'</span></div>').join(''):'<div class="empty">No upcoming scrims are scheduled yet.</div>';
+ const available=scheduled.filter(s=>scrimCapacity(s)>0);
+ select.innerHTML=available.length?available.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+' — '+new Date(s.startAt).toLocaleString()+' ('+scrimCapacity(s)+' squad spots)</option>').join(''):'<option value="">No available scrims</option>';
+ select.disabled=!available.length;
+}
+function renderPaymentReview(){
+ const el=document.getElementById('paymentReviewList');if(!el)return;
+ if(!data.registrations.length){el.innerHTML='<div class="empty">No registrations have been submitted in this browser.</div>';return}
+ el.innerHTML=data.registrations.map((r,i)=>'<div class="booking-slot"><div><strong>'+esc(r.team)+'</strong><small>Captain: '+esc((r.players||[])[0]||'—')+' · Ref: '+esc(r.id||'—')+'</small><small>Status: '+esc(r.paymentStatus||'Pending')+'</small></div><div class="booking-actions">'+(String(r.paymentStatus).toLowerCase()==='paid'?'<span class="pill green">PAID</span>':'<button class="btn primary" type="button" data-mark-paid="'+i+'">Mark paid</button>')+'</div></div>').join('');
+ el.querySelectorAll('[data-mark-paid]').forEach(btn=>btn.addEventListener('click',()=>{const r=data.registrations[Number(btn.dataset.markPaid)];if(!r)return;if(!confirm('Confirm you have independently verified payment for '+r.team+'?'))return;r.paymentStatus='Paid';save();renderPaymentReview();document.getElementById('adminMessage').textContent='Payment marked Paid in this browser preview.'}));
+}
+let bookingVerifiedTeam=null;
+document.getElementById('bookingVerifyForm').addEventListener('submit',e=>{
+ e.preventDefault();const team=document.getElementById('bookingTeam').value.trim();const captain=document.getElementById('bookingCaptain').value.trim();
+ const reg=data.registrations.find(r=>normalName(r.team)===normalName(team)&&normalName(r.players&&r.players[0])===normalName(captain));
+ const box=document.getElementById('bookingEligibility');box.classList.remove('hidden');document.getElementById('bookingActions').classList.add('hidden');bookingVerifiedTeam=null;
+ if(!reg){box.textContent='No matching registration was found in this browser. Check the exact team and captain names.';return}
+ if(String(reg.paymentStatus||'Pending').toLowerCase()!=='paid'){box.textContent='Registration found, but payment is not yet verified as Paid. Please contact an organiser after paying.';return}
+ bookingVerifiedTeam={team:reg.team,captain:reg.players[0]};box.textContent='Eligible! Registration found and payment is marked Paid. You can now join or create a scrim.';document.getElementById('bookingActions').classList.remove('hidden');renderBookingScrims();
+});
+document.getElementById('showJoinForm').addEventListener('click',()=>{document.getElementById('joinPanel').classList.remove('hidden');document.getElementById('createPanel').classList.add('hidden');renderBookingScrims()});
+document.getElementById('showCreateForm').addEventListener('click',()=>{document.getElementById('createPanel').classList.remove('hidden');document.getElementById('joinPanel').classList.add('hidden')});
+document.getElementById('joinScrimForm').addEventListener('submit',e=>{
+ e.preventDefault();const msg=document.getElementById('joinMessage');msg.classList.remove('hidden');
+ if(!bookingVerifiedTeam){msg.textContent='Verify a paid team first.';return}
+ const s=(data.scrims||[]).find(x=>String(x.id)===String(document.getElementById('joinScrimSelect').value));
+ if(!s||!s.startAt||!s.endAt||new Date(s.endAt)<=new Date()){msg.textContent='That scrim is no longer available.';return}
+ if(scrimCapacity(s)<=0){msg.textContent='This scrim is full. Each scrim is limited to 16 squads (64 players).';renderBookingScrims();return}
+ if(teamAlreadyBooked(s,bookingVerifiedTeam.team)){msg.textContent='This team is already booked into that scrim.';return}
+ s.teams=scrimTeams(s);s.teams.push({team:bookingVerifiedTeam.team,captain:bookingVerifiedTeam.captain,players:4,bookedAt:new Date().toISOString()});save();msg.textContent='Squad booking saved in this browser preview. Places used: '+s.teams.length+'/16 squads.';renderBookingScrims();renderScrims();
+});
+document.getElementById('createScrimForm').addEventListener('submit',e=>{
+ e.preventDefault();const msg=document.getElementById('createMessage');msg.classList.remove('hidden');
+ if(!bookingVerifiedTeam){msg.textContent='Verify a paid team first.';return}
+ const name=document.getElementById('newScrimName').value.trim();const startAt=document.getElementById('newScrimStart').value;const endAt=document.getElementById('newScrimEnd').value;
+ const startMs=new Date(startAt).getTime(),endMs=new Date(endAt).getTime();
+ if(!name||!Number.isFinite(startMs)||!Number.isFinite(endMs)){msg.textContent='Enter a valid scrim name, start date and end date.';return}
+ if(startMs<=Date.now()){msg.textContent='Choose a future start time.';return}
+ if(endMs<=startMs){msg.textContent='The end time must be after the start time.';return}
+ const clash=allScrimTimes().find(s=>startMs<s.endMs&&endMs>s.startMs);
+ if(clash){msg.textContent='Time conflict: “'+clash.name+'” is scheduled from '+new Date(clash.startAt).toLocaleString()+' to '+new Date(clash.endAt).toLocaleString()+'. Choose a time outside that window.';return}
+ const newScrim={id:'SCRIM-'+Date.now().toString(36).toUpperCase(),name,mode:document.getElementById('newScrimMode').value,date:startAt.slice(0,10),time:new Date(startAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),startAt,endAt,status:'Scheduled',teams:[{team:bookingVerifiedTeam.team,captain:bookingVerifiedTeam.captain,players:4,bookedAt:new Date().toISOString()}]};
+ data.scrims.push(newScrim);save();msg.textContent='Scrim created and your squad reserved a spot. This booking is stored in this browser preview only.';e.target.reset();renderBookingScrims();renderScrims();
+});
+
+render();navigate();renderBookingScrims();renderPaymentReview();
 </script>
 </body>
 </html>
