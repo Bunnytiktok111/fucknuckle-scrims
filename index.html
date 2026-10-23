@@ -96,6 +96,84 @@ h1{font-size:clamp(54px,12vw,88px)}
  .hero:before{background:linear-gradient(90deg,rgba(5,7,5,.91),rgba(5,7,5,.58)),linear-gradient(0deg,rgba(5,7,5,.86),transparent 70%)}
 }
 
+
+/* DROPZONE ARENA-INSPIRED GAMING UI REFRESH */
+:root{
+ --bg:#080a12;--panel:#101522;--panel2:#171e30;--line:#29334b;
+ --text:#f5f7ff;--muted:#a0abc2;--red:#8b5cf6;--red2:#6d42e8;
+ --gold:#55e6ff;--green:#64f0c8;--radius:16px;
+}
+body{
+ background:#080a12;color:var(--text);
+ background-image:radial-gradient(ellipse at 75% 0%,#5335a52b,transparent 34%),
+ radial-gradient(ellipse at 10% 40%,#1a78a31a,transparent 32%),
+ linear-gradient(180deg,#080a12,#0b1020 55%,#080a12);
+}
+.topbar{background:#080a12eF;border-bottom:1px solid #8b5cf62b;backdrop-filter:blur(20px)}
+.brand-mark{background:linear-gradient(145deg,#9b7bff,#54e4ff);color:#090c18;clip-path:polygon(16% 0,100% 0,84% 100%,0 100%);box-shadow:0 0 28px #8b5cf62b}
+.brand small{color:#9aa8c6}
+.navlinks{color:#b7c0d8}
+.navlinks a:hover,.navlinks a.active{color:#fff}
+.btn{border:1px solid #303b58;background:#151b2b;color:#f5f7ff;border-radius:8px;clip-path:none;letter-spacing:.2px;text-transform:none;transition:transform .18s,border-color .18s,background .18s}
+.btn:hover{border-color:#8b5cf6;box-shadow:0 8px 26px #0005}
+.btn.primary{background:linear-gradient(110deg,#9b78ff,#6e52ed);border-color:#9b78ff;color:#fff;box-shadow:0 7px 26px #8b5cf62c}
+.btn.primary:hover{background:linear-gradient(110deg,#b19aff,#8067ff)}
+.btn.ghost{background:#0d1220a8;border-color:#3c4662}
+.hero{
+ min-height:calc(100svh - 72px);padding:clamp(56px,8vh,100px) 0 58px;
+ border-bottom:1px solid #35405c;
+ background-color:#090c16;
+ background-image:linear-gradient(90deg,rgba(7,10,19,.96) 0%,rgba(7,10,19,.83) 35%,rgba(7,10,19,.45) 68%,rgba(7,10,19,.76) 100%),
+ linear-gradient(0deg,rgba(7,10,19,.94),transparent 48%),
+ url("https://images.unsplash.com/photo-1759167625071-069dc252702f?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=2600");
+ background-position:center,center,center 42%;background-size:cover;background-repeat:no-repeat;
+}
+.hero:before{opacity:1;background:radial-gradient(ellipse at 78% 40%,#7b61ff25,transparent 35%),repeating-linear-gradient(135deg,transparent 0 78px,#d5ddff07 79px 80px)}
+.hero:after{content:"DROPZONE  /  COMMUNITY BATTLE ARENA";color:#b9c7ff66;letter-spacing:3px}
+.hero-grid{width:min(1320px,calc(100% - 56px));grid-template-columns:minmax(0,1.1fr) minmax(270px,.7fr);gap:clamp(24px,5vw,76px)}
+.eyebrow{border-radius:5px;border:1px solid #7161bd66;background:#17152a;color:#c6b9ff;letter-spacing:1.7px}
+.dot{background:#55e6ff;box-shadow:0 0 16px #55e6ff}
+h1{font-size:clamp(54px,8.3vw,112px);line-height:.9;letter-spacing:-.075em;text-shadow:0 8px 40px #0008}
+h1 span{color:#a18aff;text-shadow:0 0 40px #8b5cf62b}
+.hero p{color:#c0c9dd;max-width:590px}
+.microcopy{color:#a0abc2;letter-spacing:.7px}
+.hero-art{min-height:380px;border:1px solid #6e62a54d;border-radius:18px;clip-path:none;background:linear-gradient(145deg,#11182bc7,#0a0e19ed);box-shadow:0 28px 90px #0008;backdrop-filter:blur(8px)}
+.hero-art:before{background:radial-gradient(ellipse at 60% 20%,#8b5cf638,transparent 35%),linear-gradient(135deg,transparent 20%,#55e6ff10 55%,transparent 75%),repeating-linear-gradient(135deg,transparent 0 23px,#ffffff07 23px 24px)}
+.hero-art:after{color:#b9c9ff08}
+.art-tag{border-radius:6px;border-color:#4a5272;background:#0a0e19bf;color:#dce3ff}
+.art-stat{border-radius:9px;border-color:#313b58;background:#0a0e19e8}
+.art-stat b{color:#8dceff}
+.art-stat span{color:#aab6d0}
+.section{padding-top:38px}
+.kicker,.text-link{color:#8e9dff}
+.section h2{letter-spacing:-1px}
+.stat-card,.card{position:relative;overflow:hidden;border-radius:14px;border-color:#29334b;background:linear-gradient(145deg,#141a2a,#0d1220);box-shadow:0 16px 42px #0002}
+.stat-card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,#8b5cf6,#55e6ff);opacity:.65}
+.stat-value{letter-spacing:-1.5px}
+.scrim{border-radius:10px;border-color:#2e3853;background:#12192a}
+.datebox{border-radius:8px;background:#201b3c;border-color:#6652ad}
+.datebox span{color:#c8baff}
+.how .num{border-radius:9px;background:#252044;color:#b7a6ff}
+.cta{border-radius:14px;border-color:#5b4a9b;background:radial-gradient(ellipse at 10% 0%,#593ca72b,transparent 50%),linear-gradient(110deg,#15172b,#0e1423 70%,#12202b)}
+.pill.red{background:#292046;color:#c8baff}
+.page-heading h1{letter-spacing:-.06em}
+.field input,.field select{border-radius:8px;background:#0b1020;border-color:#303b58}
+.field input:focus,.field select:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px #8b5cf61c}
+.notice{border-radius:9px;background:#1a1830;border-color:#5b4b91;color:#d7d0ff}
+.footer{border-color:#29334b;background:#080a12}
+@media(max-width:850px){
+ .hero{min-height:auto;padding:58px 0 42px;background-position:center,center,58% center}
+ .hero-grid{width:min(100% - 32px,1320px);grid-template-columns:1fr;gap:26px}
+ .hero-art{min-height:245px}
+ h1{font-size:clamp(52px,12vw,86px)}
+}
+@media(max-width:520px){
+ .hero-grid{width:calc(100% - 24px)}
+ .hero-art{min-height:220px}
+ .hero-actions .btn{flex:1 1 100%}
+ .navright>.btn{padding:9px 10px;font-size:10px}
+}
+
 </style>
 </head>
 <body>
